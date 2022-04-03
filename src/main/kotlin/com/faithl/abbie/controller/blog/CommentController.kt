@@ -47,7 +47,7 @@ class CommentController {
     @RequestMapping("/delete/{commentId}")
     @SaCheckLogin
     fun delete(@PathVariable commentId: Int): String {
-        val comment = Comment.findById(commentId)
+        val comment = transaction { Comment.findById(commentId) }
         return if (comment != null) {
             if (comment.author.value == Security.loggedId()) {
                 transaction {
@@ -65,7 +65,7 @@ class CommentController {
     @RequestMapping("/update/{commentId}")
     @SaCheckLogin
     fun update(@PathVariable commentId: Int, content: String): String {
-        val comment = Comment.findById(commentId)
+        val comment = transaction { Comment.findById(commentId) }
         return if (comment != null) {
             transaction {
                 comment.content = content
@@ -79,7 +79,7 @@ class CommentController {
 
     @RequestMapping("/list/{articleId}")
     fun list(@PathVariable articleId: Int) {
-        val article = Article.findById(articleId)
+        val article = transaction { Article.findById(articleId) }
         if (article != null) {
             val comments = transaction {
                 Comment.find { Comments.article eq articleId }.toList()
