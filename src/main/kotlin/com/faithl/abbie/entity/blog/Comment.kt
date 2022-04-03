@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
  * @author Leosouthey
@@ -31,7 +32,7 @@ class Comment(id: EntityID<Int>) : IntEntity(id) {
             article.value,
             parentId?.value,
             content,
-            User.findById(author)!!.name,
+            transaction { User.findById(author)!!.name },
             createdAt.toString(),
             updatedAt.toString()
         )

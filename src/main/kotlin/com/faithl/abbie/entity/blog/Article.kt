@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
  * @author Leosouthey
@@ -28,7 +29,7 @@ class Article(id: EntityID<Int>) : IntEntity(id) {
             id.value,
             title,
             content,
-            User.findById(author)!!.name,
+            transaction { User.findById(author)!!.name },
             createdAt.toString(),
             updatedAt.toString()
         )
