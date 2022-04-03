@@ -78,9 +78,9 @@ class CommentController {
     }
 
     @RequestMapping("/list/{articleId}")
-    fun list(@PathVariable articleId: Int) {
+    fun list(@PathVariable articleId: Int): String {
         val article = transaction { Article.findById(articleId) }
-        if (article != null) {
+        return if (article != null) {
             val comments = transaction {
                 Comment.find { Comments.article eq articleId }.toList()
             }
