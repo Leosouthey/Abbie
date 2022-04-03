@@ -1,15 +1,18 @@
 package com.faithl.abbie.controller.user
 
+import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.stp.StpUtil
 import com.faithl.abbie.entity.user.User
 import com.faithl.abbie.entity.user.Users
+import com.faithl.abbie.model.user.UserModel
+import com.faithl.abbie.util.loggedId
 import com.faithl.abbie.util.respondJson
-import com.google.gson.Gson
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.http.HttpStatus
 import org.springframework.util.DigestUtils
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/auth")
 @CrossOrigin(originPatterns = ["http://localhost:3000"])
-class Auth {
+class AuthController {
 
     /**
      * Login
@@ -70,6 +73,30 @@ class Auth {
                 addProperty("reason", "not login")
             }
         }
+    }
+
+    /**
+     * Profile
+     * 查询自身信息
+     *
+     * @return
+     */
+    @RequestMapping("/profile")
+    @SaCheckLogin
+    fun profile(): UserModel {
+        return User.findById(loggedId)!!.toUserModel()
+    }
+
+    /**
+     * Profile
+     * 查询自身信息
+     *
+     * @return
+     */
+    @RequestMapping("/profile/{userId}")
+    @SaCheckLogin
+    fun profile(@PathVariable userId: Int): UserModel {
+        return User.findById(userId)!!.toUserModel()
     }
 
     /**

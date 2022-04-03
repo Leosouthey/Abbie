@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/system")
 @CrossOrigin(originPatterns = ["http://localhost:3000"])
-class Header {
+class HeaderController {
+
+    @GetMapping("/status/maintenance")
+    fun getMaintenanceStatus(): Boolean {
+        return false
+    }
 
     @GetMapping("/banner/title")
     fun title(): String {

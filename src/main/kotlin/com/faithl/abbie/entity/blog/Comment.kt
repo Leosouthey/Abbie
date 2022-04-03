@@ -1,5 +1,7 @@
 package com.faithl.abbie.entity.blog
 
+import com.faithl.abbie.entity.user.User
+import com.faithl.abbie.entity.user.Users
 import com.faithl.abbie.model.blog.CommentModel
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -16,14 +18,23 @@ class Comment(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<Comment>(Comments)
 
-    val article by Comments.article
+    var article by Comments.article
     var content by Comments.content
+    var parentId by Comments.parentId
     var author by Comments.author
-    val createdAt by Comments.createdAt
+    var createdAt by Comments.createdAt
     var updatedAt by Comments.updatedAt
 
     fun toCommentModel(): CommentModel {
-        return CommentModel(id.value, article.value, content, author, createdAt.toString(), updatedAt.toString())
+        return CommentModel(
+            id.value,
+            article.value,
+            parentId?.value,
+            content,
+            User.findById(author)!!.name,
+            createdAt.toString(),
+            updatedAt.toString()
+        )
     }
 
 }
@@ -32,7 +43,8 @@ object Comments : IntIdTable("faithl_abbie_article") {
 
     val article = reference("id", Articles)
     val content = text("content")
-    val author = varchar("author", 255)
+    val parentId = reference("parentId", Comments).nullable()
+    val author = reference("author", Users)
     val createdAt = datetime("created_at")
     val updatedAt = datetime("updated_at")
 

@@ -46,7 +46,6 @@ dependencies {
 
     // SaToken
     implementation("cn.dev33:sa-token-spring-boot-starter:$sa_token_version")
-    implementation("javax.servlet:javax.servlet-api:4.0.1")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

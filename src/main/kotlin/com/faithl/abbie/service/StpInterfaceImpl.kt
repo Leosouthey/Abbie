@@ -15,11 +15,7 @@ class StpInterfaceImpl : StpInterface {
 
     override fun getPermissionList(loginId: Any?, loginType: String?): List<String> {
         val id = (loginId as String).toInt()
-        return transaction {
-            Permission.find { Permissions.user eq id }.map {
-                it.permission
-            }
-        }
+        return Permission.findPermissions(id)
     }
 
     override fun getRoleList(loginId: Any?, loginType: String?): List<String> {
