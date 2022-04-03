@@ -5,7 +5,7 @@ import cn.dev33.satoken.stp.StpUtil
 import com.faithl.abbie.entity.user.User
 import com.faithl.abbie.entity.user.Users
 import com.faithl.abbie.model.user.UserModel
-import com.faithl.abbie.util.loggedId
+import com.faithl.abbie.util.Stp
 import com.faithl.abbie.util.respondJson
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -84,7 +84,7 @@ class AuthController {
     @RequestMapping("/profile")
     @SaCheckLogin
     fun profile(): UserModel {
-        return transaction { User.findById(loggedId)!!.toUserModel() }
+        return transaction { User.findById(Stp.loggedId)!!.toUserModel() }
     }
 
     /**
