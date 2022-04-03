@@ -1,6 +1,7 @@
 package com.faithl.abbie.conf
 
 import com.faithl.abbie.entity.blog.Articles
+import com.faithl.abbie.entity.blog.Comments
 import com.faithl.abbie.entity.user.Permissions
 import com.faithl.abbie.entity.user.Users
 import org.jetbrains.exposed.sql.Database
@@ -45,7 +46,7 @@ class DatabaseConf {
     fun initScheme() {
         transaction {
             SchemaUtils.create(Users, Permissions)
-            SchemaUtils.create(Articles)
+            SchemaUtils.create(Articles, Comments)
         }
     }
 

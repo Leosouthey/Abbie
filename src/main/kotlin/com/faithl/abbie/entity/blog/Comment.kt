@@ -40,9 +40,9 @@ class Comment(id: EntityID<Int>) : IntEntity(id) {
 
 }
 
-object Comments : IntIdTable("faithl_abbie_article") {
+object Comments : IntIdTable("faithl_abbie_comment") {
 
-    val article = reference("id", Articles)
+    val article = reference("article", Articles)
     val content = text("content")
     val parentId = reference("parentId", Comments).nullable()
     val author = reference("author", Users)

@@ -6,7 +6,7 @@ package com.faithl.abbie.model.blog
  **/
 data class CommentModel(
     val id: Int? = null,
-    val articleId: Int,
+    val articleId: Int? = null,
     val parentId: Int? = null,
     val content: String,
     val author: String? = null,
