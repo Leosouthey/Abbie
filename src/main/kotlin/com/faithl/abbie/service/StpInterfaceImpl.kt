@@ -2,8 +2,6 @@ package com.faithl.abbie.service
 
 import cn.dev33.satoken.stp.StpInterface
 import com.faithl.abbie.entity.user.Permission
-import com.faithl.abbie.entity.user.Permissions
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Component
 
 /**

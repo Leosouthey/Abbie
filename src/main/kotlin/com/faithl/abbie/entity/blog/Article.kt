@@ -24,7 +24,14 @@ class Article(id: EntityID<Int>) : IntEntity(id) {
     var updatedAt by Articles.updatedAt
 
     fun toArticleModel(): ArticleModel {
-        return ArticleModel(id.value, title, content, User.findById(author)!!.name, createdAt.toString(), updatedAt.toString())
+        return ArticleModel(
+            id.value,
+            title,
+            content,
+            User.findById(author)!!.name,
+            createdAt.toString(),
+            updatedAt.toString()
+        )
     }
 
 }

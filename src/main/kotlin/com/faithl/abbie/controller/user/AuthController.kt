@@ -84,7 +84,7 @@ class AuthController {
     @RequestMapping("/profile")
     @SaCheckLogin
     fun profile(): UserModel {
-        return User.findById(loggedId)!!.toUserModel()
+        return transaction { User.findById(loggedId)!!.toUserModel() }
     }
 
     /**
@@ -96,7 +96,7 @@ class AuthController {
     @RequestMapping("/profile/{userId}")
     @SaCheckLogin
     fun profile(@PathVariable userId: Int): UserModel {
-        return User.findById(userId)!!.toUserModel()
+        return transaction { User.findById(userId)!!.toUserModel() }
     }
 
     /**
