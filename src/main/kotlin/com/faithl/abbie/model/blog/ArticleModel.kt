@@ -9,6 +9,8 @@ data class ArticleModel(
     val title: String,
     val content: String,
     val author: String? = null,
+    val cover: String? = null,
+    val description: String? = null,
     val createdAt: String? = null,
     val updatedAt: String? = null
 )

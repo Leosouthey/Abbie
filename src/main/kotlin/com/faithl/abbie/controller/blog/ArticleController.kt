@@ -3,11 +3,13 @@ package com.faithl.abbie.controller.blog
 import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.annotation.SaCheckPermission
 import com.faithl.abbie.entity.blog.Article
+import com.faithl.abbie.entity.blog.Articles
 import com.faithl.abbie.entity.user.User
 import com.faithl.abbie.model.blog.ArticleModel
 import com.faithl.abbie.util.Security
 import com.faithl.abbie.util.gson
 import com.faithl.abbie.util.respondJson
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -19,13 +21,22 @@ import java.time.LocalDateTime
  **/
 @RestController
 @RequestMapping("/api/v1/article")
-@CrossOrigin(originPatterns = ["http://localhost:3000"])
+@CrossOrigin
 class ArticleController {
 
-    @GetMapping("/list")
-    fun list(): List<ArticleModel> {
+    @GetMapping("/list/{page}")
+    fun list(@PathVariable page: Int): List<ArticleModel> {
         return transaction {
-            Article.all().map {
+            Article.all().orderBy(Articles.id to SortOrder.ASC).limit(10, ((page.toLong() - 1) * 10)).map {
+                it.toArticleModel()
+            }
+        }
+    }
+
+    @GetMapping("/time/{page}")
+    fun time(@PathVariable page: Int): List<ArticleModel> {
+        return transaction {
+            Article.all().orderBy(Articles.updatedAt to SortOrder.DESC).limit(10, ((page.toLong() - 1) * 10)).map {
                 it.toArticleModel()
             }
         }

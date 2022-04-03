@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
  **/
 @RestController
 @RequestMapping("/api/v1/system")
-@CrossOrigin(originPatterns = ["http://localhost:3000"])
+@CrossOrigin
 class HeaderController {
 
     @GetMapping("/status/maintenance")

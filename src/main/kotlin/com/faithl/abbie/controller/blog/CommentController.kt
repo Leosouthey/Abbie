@@ -20,7 +20,7 @@ import java.time.LocalDateTime
  **/
 @RestController
 @RequestMapping("/api/v1/comment")
-@CrossOrigin(originPatterns = ["http://localhost:3000"])
+@CrossOrigin
 class CommentController {
 
     @RequestMapping("/create/{articleId}")

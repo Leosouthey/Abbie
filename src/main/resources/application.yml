@@ -1,10 +1,8 @@
 spring:
   profiles:
     active: dev
-server:
-  port: 8080
 database:
-  url: 'jdbc:mysql://127.0.0.1:3306/faithl'
+  url: 'jdbc:postgresql://127.0.0.1:5432/faithl'
   driver: 'org.postgresql.Driver'
   username: 'root'
   password: 'root'

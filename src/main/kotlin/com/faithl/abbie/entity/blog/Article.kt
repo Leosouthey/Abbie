@@ -21,6 +21,8 @@ class Article(id: EntityID<Int>) : IntEntity(id) {
     var title by Articles.title
     var content by Articles.content
     var author by Articles.author
+    var cover by Articles.cover
+    var description by Articles.description
     var createdAt by Articles.createdAt
     var updatedAt by Articles.updatedAt
 
@@ -30,6 +32,8 @@ class Article(id: EntityID<Int>) : IntEntity(id) {
             title,
             content,
             transaction { User.findById(author)!!.name },
+            cover,
+            description,
             createdAt.toString(),
             updatedAt.toString()
         )
@@ -42,6 +46,8 @@ object Articles : IntIdTable("faithl_abbie_article") {
     val title = varchar("title", 255)
     val content = text("content")
     val author = reference("author", Users)
+    val cover = varchar("cover", 255)
+    val description = varchar("description", 255)
     val createdAt = datetime("created_at")
     val updatedAt = datetime("updated_at")
 
