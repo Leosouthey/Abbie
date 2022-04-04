@@ -24,20 +24,26 @@ import java.time.LocalDateTime
 @CrossOrigin
 class ArticleController {
 
-    @GetMapping("/list/{page}")
-    fun list(@PathVariable page: Int): List<ArticleModel> {
+    @GetMapping("/list")
+    fun list(): Int {
         return transaction {
-            Article.all().orderBy(Articles.id to SortOrder.ASC).limit(10, ((page.toLong() - 1) * 10)).map {
-                it.toArticleModel()
-            }
+            Article.all().count().toInt()
         }
     }
 
-    @GetMapping("/time/{page}")
-    fun time(@PathVariable page: Int): List<ArticleModel> {
-        return transaction {
-            Article.all().orderBy(Articles.updatedAt to SortOrder.DESC).limit(10, ((page.toLong() - 1) * 10)).map {
-                it.toArticleModel()
+    @GetMapping("/list/{sort}")
+    fun list(@PathVariable sort: String, limit: Int, offset: Int): List<ArticleModel> {
+        return if (sort == "update") {
+            transaction {
+                Article.all().orderBy(Articles.updatedAt to SortOrder.DESC).limit(limit, offset.toLong()).map {
+                    it.toArticlePatternedModel()
+                }
+            }
+        } else {
+            transaction {
+                Article.all().orderBy(Articles.id to SortOrder.ASC).limit(limit, offset.toLong()).map {
+                    it.toArticlePatternedModel()
+                }
             }
         }
     }

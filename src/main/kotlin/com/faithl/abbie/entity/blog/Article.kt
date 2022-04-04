@@ -16,15 +16,34 @@ import org.jetbrains.exposed.sql.transactions.transaction
  **/
 class Article(id: EntityID<Int>) : IntEntity(id) {
 
-    companion object : IntEntityClass<Article>(Articles)
+    companion object : IntEntityClass<Article>(Articles) {
+
+        val regexLink = "@*!*\\[?\\[(.*?)](\\(.*?\\)\\]?)*".toRegex()
+        val regexMarkChar = "#+\\s|\\*+\\s*|>+\\s*\\S*|-+\\s|\\[+\\S]|\\[+\\s]".toRegex()
+        val space = " {2,}".toRegex()
+
+    }
 
     var title by Articles.title
     var content by Articles.content
     var author by Articles.author
     var cover by Articles.cover
-    var description by Articles.description
     var createdAt by Articles.createdAt
     var updatedAt by Articles.updatedAt
+
+    fun toArticlePatternedModel(): ArticleModel {
+        val handled = content.replace(regexLink, "").replace(space, " ").replace(regexMarkChar, "").replace("\r", "")
+            .replace("\n", "")
+        return ArticleModel(
+            id.value,
+            title,
+            handled.substring(0, if (handled.length > 250) 250 else handled.length),
+            transaction { User.findById(author)!!.name },
+            cover,
+            createdAt.toString(),
+            updatedAt.toString()
+        )
+    }
 
     fun toArticleModel(): ArticleModel {
         return ArticleModel(
@@ -33,7 +52,6 @@ class Article(id: EntityID<Int>) : IntEntity(id) {
             content,
             transaction { User.findById(author)!!.name },
             cover,
-            description,
             createdAt.toString(),
             updatedAt.toString()
         )
@@ -46,8 +64,7 @@ object Articles : IntIdTable("faithl_abbie_article") {
     val title = varchar("title", 255)
     val content = text("content")
     val author = reference("author", Users)
-    val cover = varchar("cover", 255)
-    val description = varchar("description", 255)
+    val cover = varchar("cover", 255).nullable()
     val createdAt = datetime("created_at")
     val updatedAt = datetime("updated_at")
 
