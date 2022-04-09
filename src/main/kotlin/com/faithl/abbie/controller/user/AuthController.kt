@@ -10,6 +10,7 @@ import com.faithl.abbie.util.respondJson
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.util.DigestUtils
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,6 +26,11 @@ import org.springframework.web.bind.annotation.RestController
 @CrossOrigin
 class AuthController {
 
+    @RequestMapping("/isLogin")
+    fun isLogin(): Boolean {
+        return StpUtil.isLogin()
+    }
+
     /**
      * Login
      * 登录
@@ -34,7 +40,7 @@ class AuthController {
      * @return
      */
     @RequestMapping("/login")
-    fun login(username: String, password: String): String {
+    fun login(username: String, password: String): ResponseEntity<String> {
         // 加密密码
         val encryptedPsw = DigestUtils.md5DigestAsHex(password.toByteArray())
         // 查询用户
@@ -64,7 +70,7 @@ class AuthController {
      * @return
      */
     @RequestMapping("/logout")
-    fun logout(): String {
+    fun logout(): ResponseEntity<String> {
         return if (StpUtil.isLogin()) {
             StpUtil.logout()
             respondJson(HttpStatus.OK, "logout success")

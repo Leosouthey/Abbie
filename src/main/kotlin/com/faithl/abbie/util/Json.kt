@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 
 val gson = GsonBuilder().setPrettyPrinting().create()!!
 
@@ -19,10 +20,10 @@ fun buildJsonObject(json: JsonObject.() -> Unit): JsonObject {
     return JsonObject().apply(json)
 }
 
-fun respondJson(status: HttpStatus, message: String? = null, data: JsonObject.() -> Unit = {}): String {
-    return buildJson {
+fun respondJson(status: HttpStatus, message: String? = null, data: JsonObject.() -> Unit = {}): ResponseEntity<String> {
+    return ResponseEntity.status(status).body(buildJson {
         addProperty("message", message ?: status.reasonPhrase)
         addProperty("code", status.value())
         add("data", JsonObject().also(data))
-    }
+    })
 }

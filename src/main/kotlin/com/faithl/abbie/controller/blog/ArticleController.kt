@@ -12,6 +12,7 @@ import com.faithl.abbie.util.respondJson
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
@@ -51,7 +52,7 @@ class ArticleController {
     @PostMapping("/create")
     @SaCheckLogin
     @SaCheckPermission("article-create")
-    fun create(@RequestBody article: ArticleModel): String {
+    fun create(@RequestBody article: ArticleModel): ResponseEntity<String> {
         return transaction {
             val result = Article.new {
                 title = article.title
@@ -74,7 +75,7 @@ class ArticleController {
     @PutMapping("/update/{id}")
     @SaCheckLogin
     @SaCheckPermission("article-update")
-    fun update(@PathVariable id: Int, @RequestBody article: ArticleModel): String {
+    fun update(@PathVariable id: Int, @RequestBody article: ArticleModel): ResponseEntity<String> {
         val result = transaction { Article.findById(id) }
         return if (result == null) {
             respondJson(HttpStatus.NOT_FOUND, "update failed") {
@@ -96,7 +97,7 @@ class ArticleController {
     @DeleteMapping("/delete/{id}")
     @SaCheckLogin
     @SaCheckPermission("article-delete")
-    fun delete(@PathVariable id: Int): String {
+    fun delete(@PathVariable id: Int): ResponseEntity<String> {
         val result = transaction { Article.findById(id) }
         return if (result == null) {
             respondJson(HttpStatus.NOT_FOUND, "delete failed") {

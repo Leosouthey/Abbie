@@ -11,6 +11,7 @@ import com.faithl.abbie.util.gson
 import com.faithl.abbie.util.respondJson
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
@@ -25,7 +26,7 @@ class CommentController {
 
     @RequestMapping("/create/{articleId}")
     @SaCheckLogin
-    fun create(@PathVariable articleId: Int, @RequestBody comment: CommentModel): String {
+    fun create(@PathVariable articleId: Int, @RequestBody comment: CommentModel): ResponseEntity<String> {
         val article = transaction { Article.findById(articleId) }
         val insertedComment = transaction {
             Comment.new {
@@ -46,7 +47,7 @@ class CommentController {
 
     @RequestMapping("/delete/{commentId}")
     @SaCheckLogin
-    fun delete(@PathVariable commentId: Int): String {
+    fun delete(@PathVariable commentId: Int): ResponseEntity<String> {
         val comment = transaction { Comment.findById(commentId) }
         return if (comment != null) {
             if (comment.author.value == Security.loggedId()) {
@@ -64,7 +65,7 @@ class CommentController {
 
     @RequestMapping("/update/{commentId}")
     @SaCheckLogin
-    fun update(@PathVariable commentId: Int, content: String): String {
+    fun update(@PathVariable commentId: Int, content: String): ResponseEntity<String> {
         val comment = transaction { Comment.findById(commentId) }
         return if (comment != null) {
             transaction {
@@ -78,7 +79,7 @@ class CommentController {
     }
 
     @RequestMapping("/list/{articleId}")
-    fun list(@PathVariable articleId: Int): String {
+    fun list(@PathVariable articleId: Int): ResponseEntity<String> {
         val article = transaction { Article.findById(articleId) }
         return if (article != null) {
             val comments = transaction {
